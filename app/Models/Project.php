@@ -11,12 +11,14 @@ class Project extends Model
 
     protected $fillable = [
         'skill_id',
+        'Skill_id',
         'name',
+        'image',
         'project_url',
     ];
 
     public function skill()
     {
-        return $this->belongsTo(Skill::class);
+        return $this->belongsTo(Skill::class, 'Skill_id');
     }
 }
