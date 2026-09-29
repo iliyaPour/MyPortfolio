@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class SkillController extends Controller
@@ -14,7 +15,9 @@ class SkillController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Skills/Index');
+        $skills = Skill::latest()->get();
+
+        return Inertia::render('Skills/Index', compact('skills'));
     }
 
     /**
@@ -35,14 +38,16 @@ class SkillController extends Controller
             'name' => ['required', 'min:3'],
         ]);
 
-        if($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
             $image = $request->file('image')->store('skills');
             Skill::create([
                 'name' => $request->name,
-                'image' => $image
+                'image' => $image,
             ]);
+
             return Redirect::route('skills.index');
         }
+
         return Redirect::back();
     }
 
@@ -73,8 +78,11 @@ class SkillController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Skill $skill)
     {
-        //
+        Storage::delete($skill->image);
+        $skill->delete();
+
+        return Redirect::back();
     }
 }

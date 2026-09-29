@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -26,6 +27,7 @@ class ProjectController extends Controller
     public function create()
     {
         $skills = Skill::all();
+
         return Inertia::render('Projects/Create', compact('skills'));
     }
 
@@ -83,8 +85,11 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Project $project)
     {
-        //
+        Storage::delete($project->image);
+        $project->delete();
+
+        return Redirect::back();
     }
 }
