@@ -71,7 +71,7 @@ const skillList = computed(() => {
                                         <td class="px-6 py-4">
                                             <img
                                                 v-if="skill.image"
-                                                :src="'/storage/' + skill.image"
+                                                :src="skill.image.startsWith('http') || skill.image.startsWith('/') ? skill.image : '/storage/' + skill.image"
                                                 :alt="skill.name"
                                                 class="w-12 h-12 rounded object-cover border"
                                             />
