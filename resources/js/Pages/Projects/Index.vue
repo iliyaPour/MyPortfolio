@@ -65,7 +65,7 @@ const projectList = computed(() => {
                                         <td class="px-6 py-4">
                                             <img
                                                 v-if="project.image"
-                                                :src="'/storage/' + project.image"
+                                                :src="project.image.startsWith('http') || project.image.startsWith('/') ? project.image : '/storage/' + project.image"
                                                 :alt="project.name"
                                                 class="w-12 h-12 rounded object-cover border"
                                             />
