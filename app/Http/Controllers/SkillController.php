@@ -41,7 +41,7 @@ class SkillController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image')->store('skills');
+            $image = $request->file('image')->store('skills', 'public');
             Skill::create([
                 'name' => $request->name,
                 'image' => $image,
@@ -82,6 +82,7 @@ class SkillController extends Controller
      */
     public function destroy(Skill $skill)
     {
+        Storage::disk('public')->delete($skill->image);
         Storage::delete($skill->image);
         $skill->delete();
 

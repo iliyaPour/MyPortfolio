@@ -43,7 +43,7 @@ class ProjectController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image')->store('projects');
+            $image = $request->file('image')->store('projects', 'public');
             Project::create([
                 'skill_id' => $request->skill_id,
                 'Skill_id' => $request->skill_id,
@@ -87,6 +87,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        Storage::disk('public')->delete($project->image);
         Storage::delete($project->image);
         $project->delete();
 
