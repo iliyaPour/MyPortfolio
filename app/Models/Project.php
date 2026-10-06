@@ -10,7 +10,6 @@ class Project extends Model
     use HasFactory;
 
     protected $fillable = [
-        'skill_id',
         'Skill_id',
         'name',
         'image',
