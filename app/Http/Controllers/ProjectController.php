@@ -59,27 +59,36 @@ class ProjectController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(project $project)
     {
-        //
+        $skills = Skill::all();
+        return Inertia::render('Projects/Edit', compact('projects',"skills"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Project $project)
     {
-        //
+        $image = $project->image;
+        $request->validate([
+            'name' => ['required', 'min:3'],
+            'skill_id' => ['required'],
+        ]);
+        if(($request->hasFile('image'))){
+            Storage::delete($project->image);
+            $image = $request->file('image')->store('projects', 'public');
+        }
+
+        $project->update([
+            'Skill_id' => $request->skill_id,
+            'name' => $request->name,
+            'image' => $image,
+            'project_url' => $request->project_url,
+        ]);
+        return Redirect::route('projects.index');
     }
 
     /**
