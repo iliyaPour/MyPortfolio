@@ -99,7 +99,7 @@ const projectList = computed(() => {
                                             <Link
                                                 v-if="route().has('projects.edit')"
                                                 :href="route('projects.edit', project.id)"
-                                                class="font-medium text-blue-600 hover:text-blue-900"
+                                   d             class="font-medium text-blue-600 hover:text-blue-900"
                                             >
                                                 Edit
                                             </Link>

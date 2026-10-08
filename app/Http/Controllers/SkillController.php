@@ -64,17 +64,34 @@ class SkillController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Skill $skill)
     {
-        //
+        return Inertia::render('Skills/Edit', [
+            'skill' => new SkillResource($skill),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Skill $skill)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'min:3'],
+        ]);
+
+        $image = $skill->image;
+        if ($request->hasFile('image')) {
+            Storage::disk('public')->delete($skill->image);
+            $image = $request->file('image')->store('skills', 'public');
+        }
+
+        $skill->update([
+            'name' => $request->name,
+            'image' => $image,
+        ]);
+
+        return Redirect::route('skills.index');
     }
 
     /**

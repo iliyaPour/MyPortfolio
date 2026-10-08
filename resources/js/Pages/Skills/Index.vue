@@ -84,7 +84,7 @@ const skillList = computed(() => {
                                             <Link
                                                 v-if="route().has('skills.edit')"
                                                 :href="route('skills.edit', skill.id)"
-                                                class="font-medium text-blue-600 hover:text-blue-900"
+                                                class="font-medium text-blue-500 hover:text-blue-700 mr-2"
                                             >
                                                 Edit
                                             </Link>
