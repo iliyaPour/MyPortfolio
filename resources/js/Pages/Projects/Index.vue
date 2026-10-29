@@ -42,6 +42,14 @@ const projectList = computed(() => {
                         </div>
 
                         <div v-else class="relative overflow-x-auto">
+                            <div class="flex justify-end mb-4">
+                                <Link
+                                    :href="route('projects.create')"
+                                    class="bg-indigo-500 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md shadow-sm transition text-sm"
+                                >
+                                    + New Project
+                                </Link>
+                            </div>
                             <table class="w-full text-sm text-left text-gray-500">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
                                     <tr>

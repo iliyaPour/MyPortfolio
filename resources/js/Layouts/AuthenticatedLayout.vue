@@ -12,6 +12,9 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
+    <div class="p-4 mb-4 text-sm text-blue-700 bg-blue-100 dark:bg-blue-400 dark:text-blue-800" role="alert">
+        <div class="max-w-7xl mx-auto">{{ $page.props.flash.message }}</div>
+    </div>
         <div class="min-h-screen bg-gray-100">
             <nav
                 class="border-b border-gray-100 bg-white"
