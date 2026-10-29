@@ -1,27 +1,33 @@
 <script setup>
-import Checkbox from "@/Components/Checkbox.vue";
-import GuestLayout from "@/Layouts/GuestLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm, router } from "@inertiajs/vue3";
+import { computed } from "vue";
 
 const props = defineProps({
-  skills: Array,
+  skills: [Array, Object],
   project: Object,
 });
 
+const skillList = computed(() => {
+  return Array.isArray(props.skills) ? props.skills : (props.skills?.data || []);
+});
+
+const projectData = props.project?.data ?? props.project;
+
 const form = useForm({
-  name: props.project?.name,
+  name: projectData?.name ?? "",
   image: null,
-  skill_id: props.project?.skill_id,
-  project_url: props.project?.project_url,
+  skill_id: projectData?.skill_id ?? projectData?.Skill_id ?? "",
+  project_url: projectData?.project_url ?? "",
 });
 
 const submit = () => {
-  createInertiaApp.post(`/projects/${props.project.id}`, {
+  const id = projectData?.id;
+  router.post(`/projects/${id}`, {
     _method: "put",
     name: form.name,
     image: form.image,
@@ -32,25 +38,25 @@ const submit = () => {
 </script>
 
 <template>
-  <Head title="New Project" />
+  <Head title="Edit Project" />
 
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="text-xl font-semibold leading-tight text-gray-800">New Project</h2>
+      <h2 class="text-xl font-semibold leading-tight text-gray-800">Edit Project</h2>
     </template>
 
     <div class="py-12">
       <div class="mx-w-md mx-auto max-w-md sm:px-6 lg:px-8 bg-white">
         <form class="p-4" @submit.prevent="submit">
           <div>
-          <InputLabel for="skill_id" value="Skill" />
+            <InputLabel for="skill_id" value="Skill" />
             <select
               v-model="form.skill_id"
               id="skill_id"
               name="skill_id"
               class="m-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
-              <option v-for="skill in skills" :key="skill.id" :value="skill.id">
+              <option v-for="skill in skillList" :key="skill.id" :value="skill.id">
                 {{ skill.name }}
               </option>
             </select>
@@ -105,7 +111,7 @@ const submit = () => {
               :class="{ 'opacity-25': form.processing }"
               :disabled="form.processing"
             >
-              Store
+              Update
             </PrimaryButton>
           </div>
         </form>

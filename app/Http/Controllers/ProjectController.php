@@ -61,10 +61,11 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(project $project)
+    public function edit(Project $project)
     {
         $skills = Skill::all();
-        return Inertia::render('Projects/Edit', compact('projects',"skills"));
+
+        return Inertia::render('Projects/Edit', compact('project', 'skills'));
     }
 
     /**
@@ -77,8 +78,9 @@ class ProjectController extends Controller
             'name' => ['required', 'min:3'],
             'skill_id' => ['required'],
         ]);
-        if(($request->hasFile('image'))){
-            Storage::delete($project->image);
+
+        if ($request->hasFile('image')) {
+            Storage::disk('public')->delete($project->image);
             $image = $request->file('image')->store('projects', 'public');
         }
 
@@ -88,6 +90,7 @@ class ProjectController extends Controller
             'image' => $image,
             'project_url' => $request->project_url,
         ]);
+
         return Redirect::route('projects.index');
     }
 
