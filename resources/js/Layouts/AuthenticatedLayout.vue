@@ -1,20 +1,82 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+
+const page = usePage();
+const showNotification = ref(false);
+const notificationMessage = ref('');
+let notificationTimeout = null;
+
+watch(
+    () => page.props.flash?.message,
+    (newMessage) => {
+        if (newMessage) {
+            notificationMessage.value = newMessage;
+            showNotification.value = true;
+            if (notificationTimeout) {
+                clearTimeout(notificationTimeout);
+            }
+            notificationTimeout = setTimeout(() => {
+                showNotification.value = false;
+            }, 4000);
+        }
+    },
+    { immediate: true }
+);
+
+const dismissNotification = () => {
+    showNotification.value = false;
+    if (notificationTimeout) {
+        clearTimeout(notificationTimeout);
+    }
+};
 </script>
 
 <template>
     <div>
-    <div class="p-4 mb-4 text-sm text-blue-700 bg-blue-100 dark:bg-blue-400 dark:text-blue-800" role="alert">
-        <div class="max-w-7xl mx-auto">{{ $page.props.flash.message }}</div>
-    </div>
+        <!-- Toast Notification -->
+        <div class="fixed top-5 right-5 z-50">
+            <Transition
+                enter-active-class="transition ease-out duration-300 transform"
+                enter-from-class="opacity-0 translate-y-[-12px] sm:translate-x-4 sm:translate-y-0"
+                enter-to-class="opacity-100 translate-y-0 sm:translate-x-0"
+                leave-active-class="transition ease-in duration-200 transform"
+                leave-from-class="opacity-100 translate-y-0 sm:translate-x-0"
+                leave-to-class="opacity-0 translate-y-[-12px] sm:translate-x-4 sm:translate-y-0"
+            >
+                <div
+                    v-if="showNotification && notificationMessage"
+                    class="flex items-center w-full max-w-sm p-4 text-gray-800 bg-white rounded-lg shadow-lg border border-gray-100 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
+                    role="alert"
+                >
+                    <div class="inline-flex items-center justify-center shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.5 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                        </svg>
+                        <span class="sr-only">Check icon</span>
+                    </div>
+                    <div class="ms-3 text-sm font-medium">{{ notificationMessage }}</div>
+                    <button
+                        type="button"
+                        @click="dismissNotification"
+                        class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                        aria-label="Close"
+                    >
+                        <span class="sr-only">Close</span>
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                    </button>
+                </div>
+            </Transition>
+        </div>
         <div class="min-h-screen bg-gray-100">
             <nav
                 class="border-b border-gray-100 bg-white"
