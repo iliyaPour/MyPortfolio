@@ -10,6 +10,6 @@ import Header from '@/Components/Frontend/Header.vue';
         <main class="min-h-screen">
             <slot />
         </main>
-        <!-- Footer -->
+        <Footer />
     </div>
 </template>

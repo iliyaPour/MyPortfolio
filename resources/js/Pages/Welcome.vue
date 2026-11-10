@@ -1,5 +1,5 @@
 <script setup>
-import Frontend from '@/Layouts/Frontend.vue';
+import FrontendLayout from '@/Layouts/Frontend.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
@@ -29,5 +29,13 @@ function handleImageError() {
 
 <template>
     <Head title="Welcome to portfolio" />
-    <Frontend></Frontend>
+    <FrontendLayout>
+        <!-- Hero -->
+        <!-- Promote -->
+        <!-- About -->
+        <!-- Skills -->
+        <!-- Portfolio -->
+        <!-- Services -->
+        <!-- Contact -->
+    </FrontendLayout>
 </template>
